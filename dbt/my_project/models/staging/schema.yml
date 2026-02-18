@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_customer_shopping
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: invoice_no
+        tests:
+          - not_null
+          - unique
+          
+      - name: invoice_date
+        tests:
+          - not_null
+
+      - name: total_price
+        tests:
+          - not_null

@@ -1,0 +1,48 @@
+services:
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5432:5432"
+
+  airflow-webserver:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "138ff8e4c824e176b07983544e96fd69"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./dbt:/opt/airflow/dbt
+    ports:
+      - "8080:8080"
+    command: webserver
+
+  airflow-scheduler:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "138ff8e4c824e176b07983544e96fd69"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./dbt:/opt/airflow/dbt
+    command: scheduler
+
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.7.0
+    depends_on:
+      - postgres
+    volumes:
+      - ./dbt:/usr/app
+    working_dir: /usr/app
