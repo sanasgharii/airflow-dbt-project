@@ -12,9 +12,8 @@ print("Downloaded to:", path)
 
 
 # Move CSV into dbt seeds folder
-source_file = os.path.join(
-    path,
-    "customer_shopping_data.csv",
+source_file = (
+    os.path.join( path, "customer_shopping_data.csv",
 )
 
 destination_folder = os.path.join(
