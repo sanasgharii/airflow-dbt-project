@@ -12,7 +12,9 @@ print("Downloaded to:", path)
 # Move CSV into dbt seeds folder
 source_file = os.path.join(path, "customer_shopping_data.csv")
 destination_folder = "dbt/my_project/seeds"
-destination_file = os.path.join(destination_folder, "customer_shopping_data.csv")
+destination_file = os.path.join(
+    destination_folder, "customer_shopping_data.csv"
+    )
 
 os.makedirs(destination_folder, exist_ok=True)
 shutil.copy(source_file, destination_file)
